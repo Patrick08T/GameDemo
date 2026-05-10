@@ -176,23 +176,41 @@ export function useNotification() {
   const phase = useStore((s) => s.phase)
   const prevPhaseRef = useRef(phase)
 
+  const breakMessages = [
+    { title: '🐱 专注结束！', body: '喵～ 终于可以休息一下啦！' },
+    { title: '🐱 喵！', body: '工作完成！本喵有点累了，想玩会儿～' },
+    { title: '🐱 咕噜咕噜～', body: '累死啦！快来逗逗本喵吧！' },
+    { title: '🐱 喵呜～', body: '好辛苦的说...该休息一下了！' },
+    { title: '🐱 喵！', body: '本喵等你好久啦，快来陪我玩！' },
+  ]
+
+  const workMessages = [
+    { title: '🐱 喵～', body: '休息够啦！本喵又饿了，想吃鱼！' },
+    { title: '🐱 喵呜～', body: '有点无聊了呢...喂我吃饭吧！' },
+    { title: '🐱 咕噜～', body: '能量满满！该开始新一轮工作啦！' },
+    { title: '🐱 喵！', body: '睡醒啦～本喵准备好继续监督你工作了！' },
+    { title: '🐱 喵～', body: '想本喵了吗？快开始专注吧！' },
+  ]
+
+  const getRandomMessage = (messages: typeof breakMessages) => {
+    return messages[Math.floor(Math.random() * messages.length)]
+  }
+
   useEffect(() => {
     if (prevPhaseRef.current !== phase && prevPhaseRef.current !== 'idle') {
       if (phase === 'break' || phase === 'long-break') {
+        const msg = getRandomMessage(breakMessages)
         if (settings.notificationEnabled && Notification.permission === 'granted') {
-          new Notification('🐱 专注结束！该逗猫休息一下啦～', {
-            body: '小猫在等你陪它玩呢！',
-          })
+          new Notification(msg.title, { body: msg.body })
         }
         if (settings.soundEnabled) {
           playNotificationSound()
         }
       } else if (phase === 'idle') {
         if (prevPhaseRef.current === 'break' || prevPhaseRef.current === 'long-break') {
+          const msg = getRandomMessage(workMessages)
           if (settings.notificationEnabled && Notification.permission === 'granted') {
-            new Notification('🐱 休息结束！小猫又饿了～', {
-              body: '该喂食开始新一轮专注了！',
-            })
+            new Notification(msg.title, { body: msg.body })
           }
           if (settings.soundEnabled) {
             playNotificationSound()
