@@ -1,5 +1,5 @@
 import { useEffect, useRef, useCallback } from 'react'
-import { useStore, isWorkTime, type CatMood } from '@/store/useStore'
+import { useStore, type CatMood } from '@/store/useStore'
 
 export function usePomodoro() {
   const tick = useStore((s) => s.tick)
@@ -45,9 +45,7 @@ export function useCatMoodManager() {
     } else if (phase === 'break' || phase === 'long-break') {
       mood = 'playing'
     } else {
-      if (!isWorkTime()) {
-        mood = 'sleeping'
-      } else if (affection >= 60) {
+      if (affection >= 60) {
         mood = 'cuddly'
       } else if (affection < 30) {
         mood = 'unhappy'
@@ -59,23 +57,6 @@ export function useCatMoodManager() {
     setCatMood(mood)
     prevPhaseRef.current = phase
   }, [phase, affection, setCatMood, isDragging])
-}
-
-export function useTimeAwareness() {
-  const setCatMood = useStore((s) => s.setCatMood)
-  const phase = useStore((s) => s.phase)
-  const affection = useStore((s) => s.affection)
-
-  useEffect(() => {
-    const check = () => {
-      if (phase === 'idle' && !isWorkTime()) {
-        setCatMood('sleeping')
-      }
-    }
-    check()
-    const interval = setInterval(check, 60000)
-    return () => clearInterval(interval)
-  }, [phase, setCatMood])
 }
 
 export function useDrag(containerRef: React.RefObject<HTMLDivElement | null>) {
@@ -139,8 +120,6 @@ export function useDrag(containerRef: React.RefObject<HTMLDivElement | null>) {
           setCatMood('eating')
         } else if (phase === 'break' || phase === 'long-break') {
           setCatMood('playing')
-        } else if (!isWorkTime()) {
-          setCatMood('sleeping')
         } else if (affection >= 60) {
           setCatMood('cuddly')
         } else if (affection < 30) {

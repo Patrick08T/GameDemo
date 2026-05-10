@@ -212,8 +212,7 @@ export const useStore = create<AppState>()(
         const now = Date.now()
         const hourMs = 3600000
         if (now - lastAffectionDecayTime >= hourMs) {
-          const isWorkHour = isWorkTime()
-          if (isWorkHour && phase === 'idle') {
+          if (phase === 'idle') {
             set((s) => ({
               affection: Math.max(0, s.affection - 1),
               lastAffectionDecayTime: now,
@@ -238,14 +237,6 @@ export const useStore = create<AppState>()(
     }
   )
 )
-
-export function isWorkTime(): boolean {
-  const now = new Date()
-  const day = now.getDay()
-  if (day === 0 || day === 6) return false
-  const hour = now.getHours()
-  return hour >= 9 && hour < 18
-}
 
 export function formatTime(seconds: number): string {
   const m = Math.floor(seconds / 60)

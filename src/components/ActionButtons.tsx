@@ -1,5 +1,4 @@
 import { useStore } from '@/store/useStore'
-import { isWorkTime } from '@/store/useStore'
 import { usePomodoro, useNotification } from '@/hooks/useCatHooks'
 
 export default function ActionButtons() {
@@ -23,21 +22,17 @@ export default function ActionButtons() {
     startBreak()
   }
 
-  const isWork = isWorkTime()
-
   return (
     <div className="action-buttons">
       {phase === 'idle' && (
         <>
-          <button
-            className="action-btn feed-btn"
-            onClick={handleFeed}
-            disabled={!isWork}
-            title={!isWork ? '非工作时段，猫咪在休息哦～' : '开始专注，给猫咪喂食'}
-          >
+          <button className="action-btn feed-btn" onClick={handleFeed}>
             <span className="btn-icon">🐟</span>
             <span className="btn-text">喂食</span>
-            {!isWork && <span className="btn-sub">非工作时段</span>}
+          </button>
+          <button className="action-btn play-btn" onClick={handlePlay}>
+            <span className="btn-icon">🧶</span>
+            <span className="btn-text">逗猫</span>
           </button>
         </>
       )}
@@ -60,13 +55,6 @@ export default function ActionButtons() {
         <button className="action-btn pause-btn" onClick={togglePause}>
           <span className="btn-icon">{isPaused ? '▶️' : '⏸️'}</span>
           <span className="btn-text">{isPaused ? '继续' : '暂停'}</span>
-        </button>
-      )}
-
-      {phase === 'idle' && isWork && (
-        <button className="action-btn play-btn" onClick={handlePlay}>
-          <span className="btn-icon">🧶</span>
-          <span className="btn-text">逗猫</span>
         </button>
       )}
     </div>

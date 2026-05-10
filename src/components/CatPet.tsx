@@ -1,10 +1,9 @@
 import { useRef } from 'react'
 import { useStore, type CatMood } from '@/store/useStore'
-import { useDrag, useCatMoodManager, useTimeAwareness, useEncounterTrigger, useAffectionDecay, useDailyLogin } from '@/hooks/useCatHooks'
+import { useDrag, useCatMoodManager, useEncounterTrigger, useAffectionDecay, useDailyLogin } from '@/hooks/useCatHooks'
 
 export default function CatPet() {
   useCatMoodManager()
-  useTimeAwareness()
   useEncounterTrigger()
   useAffectionDecay()
   useDailyLogin()
