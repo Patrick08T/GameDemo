@@ -50,6 +50,7 @@ interface AppState {
   skipPhase: () => void
   togglePause: () => void
   tick: () => void
+  petCat: () => void
   setAffection: (delta: number) => void
   setCatMood: (mood: CatMood) => void
   setCatPosition: (pos: { x: number; y: number }) => void
@@ -163,6 +164,27 @@ export const useStore = create<AppState>()(
         }))
       },
 
+      petCat: () => {
+        set((s) => ({
+          affection: Math.min(100, s.affection + 1),
+          catMood: 'cuddly',
+        }))
+        setTimeout(() => {
+          const { phase, affection } = get()
+          if (phase === 'focus') {
+            set({ catMood: 'eating' })
+          } else if (phase === 'break' || phase === 'long-break') {
+            set({ catMood: 'playing' })
+          } else if (affection >= 60) {
+            set({ catMood: 'cuddly' })
+          } else if (affection < 30) {
+            set({ catMood: 'unhappy' })
+          } else {
+            set({ catMood: 'waiting' })
+          }
+        }, 800)
+      },
+
       setCatMood: (mood: CatMood) => set({ catMood: mood }),
 
       setCatPosition: (pos: { x: number; y: number }) => set({ catPosition: pos }),
@@ -210,8 +232,8 @@ export const useStore = create<AppState>()(
       checkAffectionDecay: () => {
         const { lastAffectionDecayTime, phase, affection } = get()
         const now = Date.now()
-        const hourMs = 3600000
-        if (now - lastAffectionDecayTime >= hourMs) {
+        const halfHourMs = 1800000
+        if (now - lastAffectionDecayTime >= halfHourMs) {
           if (phase === 'idle') {
             set((s) => ({
               affection: Math.max(0, s.affection - 1),

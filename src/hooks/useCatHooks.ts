@@ -63,6 +63,7 @@ export function useDrag(containerRef: React.RefObject<HTMLDivElement | null>) {
   const setCatPosition = useStore((s) => s.setCatPosition)
   const setIsDragging = useStore((s) => s.setIsDragging)
   const setCatMood = useStore((s) => s.setCatMood)
+  const petCat = useStore((s) => s.petCat)
   const isDragging = useStore((s) => s.isDragging)
   const isDraggingRef = useRef(false)
   const startPosRef = useRef({ x: 0, y: 0 })
@@ -107,6 +108,7 @@ export function useDrag(containerRef: React.RefObject<HTMLDivElement | null>) {
     if (longPressTimerRef.current) {
       clearTimeout(longPressTimerRef.current)
       longPressTimerRef.current = null
+      petCat()
     }
 
     if (isDraggingRef.current) {
@@ -129,7 +131,7 @@ export function useDrag(containerRef: React.RefObject<HTMLDivElement | null>) {
         }
       }, 600)
     }
-  }, [setIsDragging, setCatMood])
+  }, [setIsDragging, setCatMood, petCat])
 
   return {
     isDragging,
